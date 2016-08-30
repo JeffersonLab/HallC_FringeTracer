@@ -1,0 +1,7 @@
+# Macro for initialization of interactive mode with visualization.
+/control/verbose 2
+/control/saveHistory
+/run/verbose 2
+#
+# Visualization settings.
+/control/execute vis.mac

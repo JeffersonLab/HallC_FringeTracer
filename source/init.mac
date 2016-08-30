@@ -1,0 +1,4 @@
+# Macro for initialization of interactive mode without visualization.
+/control/verbose 2
+/control/saveHistory
+/run/verbose 2
