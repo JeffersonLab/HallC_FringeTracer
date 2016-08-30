@@ -49,17 +49,15 @@ int main(int argc, char *argv[]) {
   }
   else {
     // Batch mode.
-    G4String command = "/control/execute";
+    G4String command = "/control/execute ";
     G4String fileName = argv[1];
-    UImanager->ApplyCommand(command+fileName);
+    UImanager->ApplyCommand(command + fileName);
   }
 
-  // Start run.
-  int numberOfEvents = 3;
-  runManager->BeamOn(numberOfEvents);
-
   // Terminate.
+#ifdef G4VIS_USE
   delete visManager;
+#endif  // G4VIS_USE
   delete runManager;
   return 0;
 }
