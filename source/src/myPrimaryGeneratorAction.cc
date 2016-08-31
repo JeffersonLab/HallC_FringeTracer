@@ -7,7 +7,7 @@
 #include "G4SystemOfUnits.hh"
 
 
-myPrimaryGeneratorAction::myPrimaryGeneratorAction()
+MyPrimaryGeneratorAction::MyPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(), fParticleGun(0) {
   // Construct particle gun that shoots numberOfParticles at a time.
   G4int numberOfParticles = 1;
@@ -24,11 +24,11 @@ myPrimaryGeneratorAction::myPrimaryGeneratorAction()
 }
 
 
-myPrimaryGeneratorAction::~myPrimaryGeneratorAction() {
+MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction() {
   delete fParticleGun;
 }
 
 
-void myPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
+void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }

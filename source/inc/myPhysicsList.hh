@@ -4,10 +4,10 @@
 #include "G4VModularPhysicsList.hh"
 
 
-class myPhysicsList : public G4VModularPhysicsList {
+class MyPhysicsList : public G4VModularPhysicsList {
   public:
-    myPhysicsList();
-    virtual ~myPhysicsList();
+    MyPhysicsList();
+    virtual ~MyPhysicsList();
 
     virtual void SetCuts();
 };

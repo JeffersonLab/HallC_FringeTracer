@@ -7,13 +7,13 @@
 #include "G4SystemOfUnits.hh"
 
 
-myDetectorConstruction::myDetectorConstruction() : G4VUserDetectorConstruction() {}
+MyDetectorConstruction::MyDetectorConstruction() : G4VUserDetectorConstruction() {}
 
 
-myDetectorConstruction::~myDetectorConstruction() {}
+MyDetectorConstruction::~MyDetectorConstruction() {}
 
 
-G4VPhysicalVolume* myDetectorConstruction::Construct() {
+G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   // Material manager.
   G4NistManager* nist = G4NistManager::Instance();
 

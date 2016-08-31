@@ -3,7 +3,7 @@
 #include "G4EmStandardPhysics.hh"
 
 
-myPhysicsList::myPhysicsList() : G4VModularPhysicsList() {
+MyPhysicsList::MyPhysicsList() : G4VModularPhysicsList() {
   SetVerboseLevel(1);
 
   // EM physics.
@@ -11,9 +11,9 @@ myPhysicsList::myPhysicsList() : G4VModularPhysicsList() {
 }
 
 
-myPhysicsList::~myPhysicsList() {}
+MyPhysicsList::~MyPhysicsList() {}
 
 
-void myPhysicsList::SetCuts() {
+void MyPhysicsList::SetCuts() {
   G4VUserPhysicsList::SetCuts();
 }

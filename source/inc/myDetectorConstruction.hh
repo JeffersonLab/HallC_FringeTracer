@@ -8,10 +8,10 @@
 class G4VPhysicalVolume;
 
 
-class myDetectorConstruction : public G4VUserDetectorConstruction {
+class MyDetectorConstruction : public G4VUserDetectorConstruction {
   public:
-    myDetectorConstruction();
-    virtual ~myDetectorConstruction();
+    MyDetectorConstruction();
+    virtual ~MyDetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
 };

@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
   G4RunManager* runManager = new G4RunManager;
 
   // Initialization classes.
-  runManager->SetUserInitialization(new myDetectorConstruction);
-  runManager->SetUserInitialization(new myPhysicsList);
+  runManager->SetUserInitialization(new MyDetectorConstruction);
+  runManager->SetUserInitialization(new MyPhysicsList);
   // User action classes.
-  runManager->SetUserAction(new myPrimaryGeneratorAction);
+  runManager->SetUserAction(new MyPrimaryGeneratorAction);
 
   // Kernel.
   runManager->Initialize();
