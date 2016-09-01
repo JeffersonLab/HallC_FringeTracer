@@ -54,7 +54,7 @@ void MyScreenHit::Draw() {
 
 void MyScreenHit::Print() {
   G4cout
-    << "  trackID: " << fTrackID
+    << "  trackID: " << fTrackID << "  "
     << std::setw(7) << G4BestUnit(fPos, "Length")
     << G4endl;
 }

@@ -1,4 +1,5 @@
 #include "myDetectorConstruction.hh"
+#include "myScreenSD.hh"
 
 #include "G4Box.hh"
 #include "G4LogicalVolume.hh"
@@ -58,4 +59,12 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
 
   // Return physical world.
   return worldPhys;
+}
+
+
+void MyDetectorConstruction::ConstructSDandField() {
+  G4String screenSDname = "beam/screenSD";
+  MyScreenSD* aScreenSD = new MyScreenSD(screenSDname, "screenHitsCollection");
+
+  SetSensitiveDetector("Screen", aScreenSD, true);
 }

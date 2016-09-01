@@ -44,7 +44,7 @@ void MyScreenSD::EndOfEvent(G4HCofThisEvent*) {
     G4int nofHits = fHitsCollection->entries();
     G4cout
       << G4endl
-      << "-------->Hits Collection: in this event they are " << nofHits
+      << "-------->Hits Collection: in this event there are " << nofHits
       << " hits in the tracker chambers: " << G4endl;
     for (G4int i=0; i<nofHits; i++) (*fHitsCollection)[i]->Print();
   }

@@ -1,3 +1,4 @@
+#include "G4ios.hh"
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
@@ -10,7 +11,7 @@
 
 #include "myDetectorConstruction.hh"
 #include "myPhysicsList.hh"
-#include "myPrimaryGeneratorAction.hh"
+#include "myActionInitialization.hh"
 
 
 int main(int argc, char *argv[]) {
@@ -18,10 +19,10 @@ int main(int argc, char *argv[]) {
   G4RunManager* runManager = new G4RunManager;
 
   // Initialization classes.
-  runManager->SetUserInitialization(new MyDetectorConstruction);
-  runManager->SetUserInitialization(new MyPhysicsList);
+  runManager->SetUserInitialization(new MyDetectorConstruction());
+  runManager->SetUserInitialization(new MyPhysicsList());
   // User action classes.
-  runManager->SetUserAction(new MyPrimaryGeneratorAction);
+  runManager->SetUserInitialization(new MyActionInitialization());
 
   // Kernel.
   runManager->Initialize();
