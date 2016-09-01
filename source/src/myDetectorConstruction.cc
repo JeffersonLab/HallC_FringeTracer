@@ -7,6 +7,13 @@
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 
+#include "G4GlobalMagFieldMessenger.hh"
+#include "G4AutoDelete.hh"
+#include "G4ThreeVector.hh"
+
+
+G4GlobalMagFieldMessenger* MyDetectorConstruction::fMagFieldMessenger = 0;
+
 
 MyDetectorConstruction::MyDetectorConstruction() : G4VUserDetectorConstruction() {}
 
@@ -41,9 +48,10 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   // Screen.
   G4double screen_hx = 40.0*cm;
   G4double screen_hy = 40.0*cm;
-  G4double screen_hz = 0.5*cm;
+  G4double screen_hz = 0.5*mm;
 
-  G4Material* screenMat = nist->FindOrBuildMaterial("G4_Al");
+  //G4Material* screenMat = nist->FindOrBuildMaterial("G4_Al");
+  G4Material* screenMat = nist->FindOrBuildMaterial("G4_Galactic");
 
   G4Box* screenBox = new G4Box("Screen", screen_hx, screen_hy, screen_hz);
   G4LogicalVolume* screenLog = new G4LogicalVolume(screenBox, screenMat, "Screen");
@@ -63,8 +71,16 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
 
 
 void MyDetectorConstruction::ConstructSDandField() {
+  // Set screen sensitive detector.
   G4String screenSDname = "beam/screenSD";
   MyScreenSD* aScreenSD = new MyScreenSD(screenSDname, "screenHitsCollection");
 
   SetSensitiveDetector("Screen", aScreenSD, true);
+
+  // Set global magnetic field.
+  G4ThreeVector fieldValue = G4ThreeVector(0.0, 0.0, 0.0)*tesla;
+  fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
+  fMagFieldMessenger->SetVerboseLevel(1);
+
+  G4AutoDelete::Register(fMagFieldMessenger);
 }
