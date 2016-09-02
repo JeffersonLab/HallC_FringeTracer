@@ -6,6 +6,7 @@
 #include "G4Event.hh"
 #include "G4ios.hh"
 #include "G4SDManager.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 
 

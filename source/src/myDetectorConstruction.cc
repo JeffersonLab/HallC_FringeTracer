@@ -65,6 +65,21 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
     0  // copy number
   );
 
+  // Gun frame.
+  G4Material* gunMat = nist->FindOrBuildMaterial("G4_Galactic");
+
+  G4Box* gunBox = new G4Box("Gun", 2.0*cm, 2.0*cm, 10*cm);
+  G4LogicalVolume* gunLog = new G4LogicalVolume(gunBox, gunMat, "Gun");
+  new G4PVPlacement(
+    0,
+    G4ThreeVector(0.0, 0.0, -40.0*cm),
+    gunLog,
+    "Gun",
+    worldLog,
+    false,
+    0
+  );
+
   // Return physical world.
   return worldPhys;
 }

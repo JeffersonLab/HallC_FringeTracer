@@ -9,9 +9,9 @@ MyRunAction::MyRunAction() : G4UserRunAction() {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
   analysisManager->CreateNtuple("tmp", "screen hits");
-  analysisManager->CreateNtupleDColumn("x");
-  analysisManager->CreateNtupleDColumn("y");
-  analysisManager->CreateNtupleDColumn("z");
+  analysisManager->CreateNtupleDColumn("x [mm]");
+  analysisManager->CreateNtupleDColumn("y [mm]");
+  analysisManager->CreateNtupleDColumn("z [mm]");
   analysisManager->FinishNtuple();
 }
 

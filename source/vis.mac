@@ -70,7 +70,7 @@
 /vis/scene/endOfEventAction accumulate
 #
 # Axes, scale, etc.
-/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
+#/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
 /vis/scene/add/eventID # Drawn at end of event
 /vis/scene/add/date    # Date stamp
 #
