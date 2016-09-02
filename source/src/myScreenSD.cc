@@ -31,7 +31,7 @@ G4bool MyScreenSD::ProcessHits(G4Step* step, G4TouchableHistory*) {
   MyScreenHit* newHit = new MyScreenHit();
 
   newHit->SetTrackID(step->GetTrack()->GetTrackID());
-  newHit->SetPos(step->GetPostStepPoint()->GetPosition());
+  newHit->SetPos(step->GetPreStepPoint()->GetPosition());
 
   fHitsCollection->insert(newHit);
 
