@@ -6,7 +6,9 @@
 #include "globals.hh"
 
 
-class G4GlobalMagFieldMessenger;
+class MyMagneticField;
+
+class G4FieldManager;
 class G4VPhysicalVolume;
 
 
@@ -19,7 +21,8 @@ class MyDetectorConstruction : public G4VUserDetectorConstruction {
     virtual void ConstructSDandField();
 
   private:
-    static G4GlobalMagFieldMessenger* fMagFieldMessenger;
+    static MyMagneticField* fMagneticField;
+    static G4FieldManager* fFieldMgr;
 };
 
 #endif  // myDetectorConstruction_h

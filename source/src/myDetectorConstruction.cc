@@ -1,21 +1,27 @@
 #include "myDetectorConstruction.hh"
+#include "myMagneticField.hh"
 #include "myScreenSD.hh"
 
 #include "G4Box.hh"
+#include "G4FieldManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4NistManager.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
-
-#include "G4GlobalMagFieldMessenger.hh"
-#include "G4AutoDelete.hh"
 #include "G4ThreeVector.hh"
 
+#include "G4AutoDelete.hh"
+#include "G4TransportationManager.hh"
+#include "G4UserLimits.hh"
 
-G4GlobalMagFieldMessenger* MyDetectorConstruction::fMagFieldMessenger = 0;
+
+MyMagneticField* MyDetectorConstruction::fMagneticField = 0;
+G4FieldManager* MyDetectorConstruction::fFieldMgr = 0;
 
 
-MyDetectorConstruction::MyDetectorConstruction() : G4VUserDetectorConstruction() {}
+MyDetectorConstruction::MyDetectorConstruction()
+: G4VUserDetectorConstruction()
+{}
 
 
 MyDetectorConstruction::~MyDetectorConstruction() {}
@@ -44,6 +50,10 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
     false,  // boolean operation
     0  // copy number
   );
+
+  // Set step limit in world.
+  G4UserLimits* userLimits = new G4UserLimits(10*cm);
+  worldLog->SetUserLimits(userLimits);
 
   // Screen.
   G4double screen_hx = 40.0*cm;
@@ -92,10 +102,12 @@ void MyDetectorConstruction::ConstructSDandField() {
 
   SetSensitiveDetector("Screen", aScreenSD, true);
 
-  // Set global magnetic field.
-  G4ThreeVector fieldValue = G4ThreeVector(0.0, 0.0, 0.0)*tesla;
-  fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
-  fMagFieldMessenger->SetVerboseLevel(1);
+  // Set magnetic field.
+  fMagneticField = new MyMagneticField();
+  fFieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  fFieldMgr->SetDetectorField(fMagneticField);
+  fFieldMgr->CreateChordFinder(fMagneticField);
 
-  G4AutoDelete::Register(fMagFieldMessenger);
+  G4AutoDelete::Register(fMagneticField);
+  G4AutoDelete::Register(fFieldMgr);
 }

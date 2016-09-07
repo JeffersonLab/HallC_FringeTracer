@@ -1,6 +1,7 @@
 #include "myPhysicsList.hh"
 
 #include "G4EmStandardPhysics.hh"
+#include "G4StepLimiterPhysics.hh"
 
 
 MyPhysicsList::MyPhysicsList() : G4VModularPhysicsList() {
@@ -8,6 +9,8 @@ MyPhysicsList::MyPhysicsList() : G4VModularPhysicsList() {
 
   // EM physics.
   RegisterPhysics(new G4EmStandardPhysics());
+  // Step limiter in magnetic field.
+  RegisterPhysics(new G4StepLimiterPhysics());
 }
 
 

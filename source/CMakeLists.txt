@@ -35,6 +35,9 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.hh)
 add_executable(fringe_tracer fringe_tracer.cc ${sources} ${headers})
 target_link_libraries(fringe_tracer ${Geant4_LIBRARIES})
 
+add_executable(test_MyTabField01 test_MyTabField01.cc ${sources} ${headers})
+target_link_libraries(test_MyTabField01 ${Geant4_LIBRARIES})
+
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build B1. This is so that we can run the executable directly because it
