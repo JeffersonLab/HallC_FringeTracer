@@ -26,10 +26,10 @@ void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
 
   MyScreenHitsCollection* screenHC = GetHitsCollection(fScreenHCID, anEvent);
 
-  if (screenHC->entries()>0) {
-    MyScreenHit* screenHit = (*screenHC)[0];
+  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
-    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  for (int i=0; i<screenHC->entries(); ++i) {
+    MyScreenHit* screenHit = (*screenHC)[i];
 
     G4ThreeVector pos = screenHit->GetPos();
 

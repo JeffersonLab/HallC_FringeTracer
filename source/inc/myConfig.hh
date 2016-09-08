@@ -19,6 +19,7 @@ namespace config {
   };
 
 
+  extern std::string screenHitOutName;
   extern double shmsAngle;
 
   extern double beamEnergy;

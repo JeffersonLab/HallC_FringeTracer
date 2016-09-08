@@ -7,6 +7,7 @@
 
 
 namespace config {
+  std::string screenHitOutName = "out";
   double shmsAngle = 5.5;
 
   double beamEnergy = 11.0;
@@ -40,7 +41,10 @@ void config::loadConfigFile() {
       if (tokens[0][0] == '#') continue;
 
       // General settings.
-      if (tokens[0] == "shms.angle") {
+      if (tokens[0] == "screenHit.outName") {
+        config::screenHitOutName = tokens[2];
+      }
+      else if (tokens[0] == "shms.angle") {
         config::shmsAngle = std::atof(tokens[2].c_str());
       }
       // Beam settings.
@@ -81,6 +85,7 @@ void config::loadConfigFile() {
 
 void config::printConfig() {
   std::cout << "General settings:" << std::endl;
+  std::cout << "  Screen hit output file name: " << config::screenHitOutName << std::endl;
   std::cout << "  SHMS angle: " << config::shmsAngle << "deg" << std::endl;
   std::cout << std::endl;
   std::cout << "Beam settings:" << std::endl;

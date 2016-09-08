@@ -16,7 +16,7 @@
 #include "myConfig.hh"
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   // Parse config file.
   config::loadConfigFile();
 

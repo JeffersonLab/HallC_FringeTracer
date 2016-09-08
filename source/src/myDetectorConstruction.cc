@@ -15,6 +15,7 @@
 #include "G4TransportationManager.hh"
 #include "G4UserLimits.hh"
 
+#include "G4ios.hh"
 
 MyMagneticField* MyDetectorConstruction::fMagneticField = 0;
 G4FieldManager* MyDetectorConstruction::fFieldMgr = 0;
@@ -56,12 +57,32 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   G4UserLimits* userLimits = new G4UserLimits(10*cm);
   worldLog->SetUserLimits(userLimits);
 
+  // Target.
+  // 1.5% radiation length carbon
+  G4Material* targetMat = nist->FindOrBuildMaterial("G4_C");
+  G4double radLength_C = 42.7 * g/cm/cm;
+
+  G4double target_hx = 10.0*cm;
+  G4double target_hy = 10.0*cm;
+  G4double target_hz = 0.015*radLength_C/targetMat->GetDensity() / 2.0;
+
+  G4Box* targetBox = new G4Box("Target_C", target_hx, target_hy, target_hz);
+  G4LogicalVolume* targetLog = new G4LogicalVolume(targetBox, targetMat, "Target_C");
+  new G4PVPlacement(
+    0,  // rotation
+    G4ThreeVector(0.0, 0.0, 0.0),  // location
+    targetLog,  // logical volume
+    "Target_C",  // name
+    worldLog,  // mother volume
+    false,  // boolean operation
+    0  // copy number
+  );
+
   // Screen.
   G4double screen_hx = 40.0*cm;
   G4double screen_hy = 40.0*cm;
   G4double screen_hz = 0.5*mm;
 
-  //G4Material* screenMat = nist->FindOrBuildMaterial("G4_Al");
   G4Material* screenMat = nist->FindOrBuildMaterial("G4_Galactic");
 
   G4Box* screenBox = new G4Box("Screen", screen_hx, screen_hy, screen_hz);
