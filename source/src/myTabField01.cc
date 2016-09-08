@@ -11,6 +11,7 @@
 
 
 MyTabField::MyTabField() {
+  // Transformation from HB Tosca to target coordinate system.
   transTosca = G4ThreeVector(17.259*cm, 0.0*cm, 175.142*cm);
   thTosca = 187.0 * 3.14159265358979323846/180.0;
   cth = cos(-1.0*thTosca);
@@ -23,42 +24,44 @@ MyTabField::MyTabField() {
     exit(1);
   }
 
-  G4cout << G4endl << G4endl << G4endl << G4endl;
-  G4cout << "Reading in magnetic field!" << G4endl;
+  G4cout << G4endl << G4endl;
+  G4cout << "Reading in HB magnetic field!" << G4endl;
 
   G4double x=0.0, y=0.0, z=0.0, Bx=0.0, By=0.0, Bz=0.0;
-  xMin=0.0, yMin=0.0, zMin=0.0;
-  xMax=0.0, yMax=0.0, zMax=0.0;
 
   // Read in grid size.
-  ifs >> nz >> ny >> nx;
-  len = nx*ny*nz;
-  //G4cout << nx << " " << ny << " " << nz << " " << len << G4endl;
+  ifs >> gridSize[2] >> gridSize[1] >> gridSize[0];
+  int len = gridSize[0]*gridSize[1]*gridSize[2];
 
+  xField.resize(len, 0.0);
   yField.resize(len, 0.0);
+  zField.resize(len, 0.0);
 
   // Skip the rest of header.
   ifs.ignore(256, '0');
 
   // Read the grid.
   ifs >> x >> y >> z >> Bx >> By >> Bz;
-  xMin = x*cm; yMin = y*cm; zMin = z*cm;
+  xField[0] = Bx;
   yField[0] = By;
-  //G4cout << "x: " << x << "  y: " << y << "  z: " << z << G4endl;
-  //G4cout << "Bx: " << Bx << "  By: " << By << "  Bz: " << Bz << G4endl;
+  zField[0] = Bz;
+
+  boundaryMin[0] = x*cm;
+  boundaryMin[1] = y*cm;
+  boundaryMin[2] = z*cm;
+
   for (int i=1; i<len; ++i) {
     ifs >> x >> y >> z >> Bx >> By >> Bz;
+    xField[i] = Bx*gauss;
     yField[i] = By*gauss;
+    zField[i] = Bz*gauss;
   }
-  xMax = x*cm; yMax = y*cm; zMax = z*cm;
 
-  G4cout << xMin << " < x < " << xMax << G4endl;
-  G4cout << yMin << " < y < " << yMax << G4endl;
-  G4cout << zMin << " < z < " << zMax << G4endl;
+  boundaryMax[0] = x*cm;
+  boundaryMax[1] = y*cm;
+  boundaryMax[2] = z*cm;
 
-  //G4cout << "x: " << x << "  y: " << y << "  z: " << z << G4endl;
-  //G4cout << "Bx: " << Bx << "  By: " << By << "  Bz: " << Bz << G4endl;
-  G4cout << G4endl << G4endl << G4endl << G4endl;
+  G4cout << G4endl << G4endl;
 
   ifs.close();
 }
@@ -68,8 +71,8 @@ MyTabField::~MyTabField() {}
 
 
 void MyTabField::GetFieldValue(const G4double point[4], G4double* bField) const {
-  G4cout << "(" << point[0] << ", " << point[1] << ", "
-  << point[2] << ", " << point[3] << ")" << G4endl;
+  //G4cout << "(" << point[0] << ", " << point[1] << ", "
+  //<< point[2] << ", " << point[3] << ")" << G4endl;
 
   bField[0] = 0.0;
   bField[1] = 0.0;
@@ -78,42 +81,41 @@ void MyTabField::GetFieldValue(const G4double point[4], G4double* bField) const 
   G4double tpoint[4];
   transform(point, tpoint);
 
+  G4bool yNeg = false;
+  if (tpoint[1]<0.0) {
+    tpoint[1] *= -1.0;
+    yNeg = true;
+  }
+
   if (
-    xMin<=tpoint[0] && tpoint[0]<=xMax &&
-    yMin<=tpoint[1] && tpoint[1]<=yMax &&
-    zMin<=tpoint[2] && tpoint[2]<=zMax
+    boundaryMin[0]<=tpoint[0] && tpoint[0]<=boundaryMax[0] &&
+    boundaryMin[1]<=tpoint[1] && tpoint[1]<=boundaryMax[1] &&
+    boundaryMin[2]<=tpoint[2] && tpoint[2]<=boundaryMax[2]
   ) {
-    double xFraction=0.0, yFraction=0.0, zFraction=0.0;
-    xFraction = (tpoint[0] - xMin)/(xMax - xMin);
-    yFraction = (tpoint[1] - yMin)/(yMax - yMin);
-    zFraction = (tpoint[2] - zMin)/(zMax - zMin);
+    G4double posFraction[3] = {0.0, 0.0, 0.0};
+    G4double posLocal[3] = {0.0, 0.0, 0.0};
+    G4double posIndexd[3] = {0.0, 0.0, 0.0};
+    G4int posIndex[3] = {0, 0, 0};
 
-    double xdi=0.0, ydi=0.0, zdi=0.0;
-    double xLocal = (std::modf(xFraction*(nx-1), &xdi));
-    double yLocal = (std::modf(yFraction*(ny-1), &ydi));
-    double zLocal = (std::modf(zFraction*(nz-1), &zdi));
-    int xi = static_cast<int>(xdi);
-    int yi = static_cast<int>(ydi);
-    int zi = static_cast<int>(zdi);
+    for (size_t i=0; i<3; ++i) {
+      posFraction[i] = (tpoint[i]-boundaryMin[i]) / (boundaryMax[i]-boundaryMin[i]);
+      posLocal[i] = (std::modf(posFraction[i]*(gridSize[i]-1), &posIndexd[i]));
+      posIndex[i] = static_cast<G4int>(posIndexd[i]);
 
-    if (xi==nx-1) {--xi; xLocal = 1.0;}
-    if (yi==ny-1) {--yi; yLocal = 1.0;}
-    if (zi==nz-1) {--zi; zLocal = 1.0;}
+      if (posIndex[i]==gridSize[i]-1) {
+        --posIndex[i];
+        posLocal[i] = 1.0;
+      }
+    }
 
-    bField[1] =
-      yField[(zi)+nz*(yi)+nz*ny*(xi)] * (1-xLocal)*(1-yLocal)*(1-zLocal) +
-      yField[(zi)+nz*(yi)+nz*ny*(xi+1)] * (xLocal)*(1-yLocal)*(1-zLocal) +
-      yField[(zi)+nz*(yi+1)+nz*ny*(xi+1)] * (xLocal)*(yLocal)*(1-zLocal) +
-      yField[(zi)+nz*(yi+1)+nz*ny*(xi)] * (1-xLocal)*(yLocal)*(1-zLocal) +
-      yField[(zi+1)+nz*(yi)+nz*ny*(xi)] * (1-xLocal)*(1-yLocal)*(zLocal) +
-      yField[(zi+1)+nz*(yi)+nz*ny*(xi+1)] * (xLocal)*(1-yLocal)*(zLocal) +
-      yField[(zi+1)+nz*(yi+1)+nz*ny*(xi+1)] * (xLocal)*(yLocal)*(zLocal) +
-      yField[(zi+1)+nz*(yi+1)+nz*ny*(xi)] * (1-xLocal)*(yLocal)*(zLocal);
+    bField[0] = interpolate(xField, posIndex, posLocal);
+    bField[1] = interpolate(yField, posIndex, posLocal);
+    bField[2] = interpolate(zField, posIndex, posLocal);
 
-    bField[1] *= gauss;
-
-
-    //bField[1] = 1*tesla;
+    if (yNeg) {
+      bField[0] *= -1.0;
+      bField[2] *= -1.0;
+    }
   }
 }
 
@@ -126,4 +128,21 @@ void MyTabField::transform(const G4double point[4], G4double* tpoint) const {
   tpoint[1] = point[1];
   tpoint[2] = cth*zt - sth*xt;
   tpoint[3] = point[3];
+}
+
+
+G4double MyTabField::interpolate(
+  const std::vector<G4double> &field,
+  const G4int posIndex[3],
+  const G4double posLocal[3]
+) const {
+  return
+    field[(posIndex[2]) + gridSize[2]*(posIndex[1]) + gridSize[2]*gridSize[1]*(posIndex[0])] * (1-posLocal[0])*(1-posLocal[1])*(1-posLocal[2]) +
+    field[(posIndex[2]) + gridSize[2]*(posIndex[1]) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(1-posLocal[1])*(1-posLocal[2]) +
+    field[(posIndex[2]) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(posLocal[1])*(1-posLocal[2]) +
+    field[(posIndex[2]) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0])] * (1-posLocal[0])*(posLocal[1])*(1-posLocal[2]) +
+    field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]) + gridSize[2]*gridSize[1]*(posIndex[0])] * (1-posLocal[0])*(1-posLocal[1])*(posLocal[2]) +
+    field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(1-posLocal[1])*(posLocal[2]) +
+    field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(posLocal[1])*(posLocal[2]) +
+    field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0])] * (1-posLocal[0])*(posLocal[1])*(posLocal[2]);
 }

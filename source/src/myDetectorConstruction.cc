@@ -34,7 +34,7 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   // World.
   G4double world_hx = 1.0*m;
   G4double world_hy = 1.0*m;
-  G4double world_hz = 3.0*m;
+  G4double world_hz = 52.0*m;
 
   G4Material* worldMat = nist->FindOrBuildMaterial("G4_Galactic");
 
@@ -67,7 +67,7 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   G4LogicalVolume* screenLog = new G4LogicalVolume(screenBox, screenMat, "Screen");
   new G4PVPlacement(
     0,  // rotation
-    G4ThreeVector(0.0, 0.0, 2.0*m),  // location
+    G4ThreeVector(0.0, 0.0, 51.8*m),  // location
     screenLog,  // logical volume
     "Screen",  // name
     worldLog,  // mother volume
