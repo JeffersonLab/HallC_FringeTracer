@@ -25,16 +25,19 @@ void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
   }
 
   MyScreenHitsCollection* screenHC = GetHitsCollection(fScreenHCID, anEvent);
-  MyScreenHit* screenHit = (*screenHC)[0];
 
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+  if (screenHC->entries()>0) {
+    MyScreenHit* screenHit = (*screenHC)[0];
 
-  G4ThreeVector pos = screenHit->GetPos();
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
-  analysisManager->FillNtupleDColumn(0, pos[0]);
-  analysisManager->FillNtupleDColumn(1, pos[1]);
-  analysisManager->FillNtupleDColumn(2, pos[2]);
-  analysisManager->AddNtupleRow();
+    G4ThreeVector pos = screenHit->GetPos();
+
+    analysisManager->FillNtupleDColumn(0, pos[0]);
+    analysisManager->FillNtupleDColumn(1, pos[1]);
+    analysisManager->FillNtupleDColumn(2, pos[2]);
+    analysisManager->AddNtupleRow();
+  }
 }
 
 

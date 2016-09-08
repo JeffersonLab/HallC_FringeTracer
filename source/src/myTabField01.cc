@@ -1,6 +1,7 @@
 #include "myTabField01.hh"
 
 #include "G4ios.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 
@@ -10,22 +11,27 @@
 #include <fstream>
 
 
-MyTabField::MyTabField() {
-  // Transformation from HB Tosca to target coordinate system.
-  transTosca = G4ThreeVector(17.259*cm, 0.0*cm, 175.142*cm);
-  thTosca = 187.0 * 3.14159265358979323846/180.0;
+MyTabField::MyTabField(const config::MagnetConfig& magConf) {
+  G4cout << G4endl;
+  G4cout << "Reading in magnetic field map:" << G4endl;
+  G4cout << "  " << magConf.name << " : " << magConf.fieldMapFile << G4endl;
+  G4cout << G4endl;
+
+  transTosca = G4ThreeVector();
+  transTosca[0] = magConf.transLength*cm*sin((magConf.transAlpha0+config::shmsAngle)*degree);
+  transTosca[2] = magConf.transLength*cm*cos((magConf.transAlpha0+config::shmsAngle)*degree);
+
+  thTosca = (magConf.transBeta0 + config::shmsAngle)*degree;
+
   cth = cos(-1.0*thTosca);
   sth = sin(-1.0*thTosca);
 
-  std::ifstream ifs("data/HB-V9pt3-11pt3Gev.table");
+  std::ifstream ifs(magConf.fieldMapFile);
 
   if (!ifs.is_open()) {
     G4cerr << "File could not be opened!" << G4endl;
     exit(1);
   }
-
-  G4cout << G4endl << G4endl;
-  G4cout << "Reading in HB magnetic field!" << G4endl;
 
   G4double x=0.0, y=0.0, z=0.0, Bx=0.0, By=0.0, Bz=0.0;
 
@@ -61,8 +67,6 @@ MyTabField::MyTabField() {
   boundaryMax[1] = y*cm;
   boundaryMax[2] = z*cm;
 
-  G4cout << G4endl << G4endl;
-
   ifs.close();
 }
 
@@ -73,10 +77,6 @@ MyTabField::~MyTabField() {}
 void MyTabField::GetFieldValue(const G4double point[4], G4double* bField) const {
   //G4cout << "(" << point[0] << ", " << point[1] << ", "
   //<< point[2] << ", " << point[3] << ")" << G4endl;
-
-  bField[0] = 0.0;
-  bField[1] = 0.0;
-  bField[2] = 0.0;
 
   G4double tpoint[4];
   transform(point, tpoint);
@@ -108,9 +108,9 @@ void MyTabField::GetFieldValue(const G4double point[4], G4double* bField) const 
       }
     }
 
-    bField[0] = interpolate(xField, posIndex, posLocal);
-    bField[1] = interpolate(yField, posIndex, posLocal);
-    bField[2] = interpolate(zField, posIndex, posLocal);
+    bField[0] += interpolate(xField, posIndex, posLocal);
+    bField[1] += interpolate(yField, posIndex, posLocal);
+    bField[2] += interpolate(zField, posIndex, posLocal);
 
     if (yNeg) {
       bField[0] *= -1.0;

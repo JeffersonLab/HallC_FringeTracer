@@ -18,7 +18,7 @@ class MyMagneticField : public G4MagneticField {
     virtual void GetFieldValue(const G4double point[4], G4double* bField) const;
 
   private:
-    MyTabField magField;
+    std::vector<MyTabField> magFields;
 };
 
 #endif  // myMagneticField_h

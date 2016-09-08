@@ -47,6 +47,7 @@ set(FRINGETRACER_SCRIPTS
   init.mac
   init_vis.mac
   vis.mac
+  config.txt
   )
 
 foreach(_script ${FRINGETRACER_SCRIPTS})

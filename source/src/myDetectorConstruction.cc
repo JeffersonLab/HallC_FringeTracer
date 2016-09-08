@@ -1,4 +1,5 @@
 #include "myDetectorConstruction.hh"
+#include "myConfig.hh"
 #include "myMagneticField.hh"
 #include "myScreenSD.hh"
 

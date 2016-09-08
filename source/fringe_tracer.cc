@@ -13,8 +13,13 @@
 #include "myPhysicsList.hh"
 #include "myActionInitialization.hh"
 
+#include "myConfig.hh"
+
 
 int main(int argc, char *argv[]) {
+  // Parse config file.
+  config::loadConfigFile();
+
   // Default run manager.
   G4RunManager* runManager = new G4RunManager;
 

@@ -1,11 +1,12 @@
 #include "myPrimaryGeneratorAction.hh"
-
-#include "globals.hh"
-#include "Randomize.hh"
+#include "myConfig.hh"
 
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
+
+#include "globals.hh"
+#include "Randomize.hh"
 
 
 MyPrimaryGeneratorAction::MyPrimaryGeneratorAction()
@@ -21,7 +22,7 @@ MyPrimaryGeneratorAction::MyPrimaryGeneratorAction()
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticlePosition(G4ThreeVector(0.0, 0.0, 0.0));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.0, 0.0, 1.0));
-  fParticleGun->SetParticleEnergy(6.0*GeV);
+  fParticleGun->SetParticleEnergy(config::beamEnergy*GeV);
 }
 
 
@@ -31,9 +32,8 @@ MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction() {
 
 
 void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
-  //G4double x0 = 8.0*mm * (G4UniformRand()-0.5);
-  G4double x0 = 0.0;
-  G4double y0 = 8.0*mm * (G4UniformRand()-0.5);
+  G4double x0 = 2*config::beamRasterX*mm * (G4UniformRand()-0.5);
+  G4double y0 = 2*config::beamRasterY*mm * (G4UniformRand()-0.5);
 
   fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, -30.0*cm));
   fParticleGun->GeneratePrimaryVertex(anEvent);

@@ -1,0 +1,30 @@
+# Example configuration file.
+shms.angle = 5.5  # deg
+
+beam.energy = 11.0  # GeV
+beam.raster.x = 4.0  # +- mm
+beam.raster.y = 4.0  # +- mm
+
+magnet.name = HB
+magnet.fieldMap = data/HB-V9pt3-11pt3Gev.table
+magnet.trans.l = 175.990321453
+magnet.trans.alpha0 = 0.127921986971
+magnet.trans.beta0 = 181.5
+
+magnet.name = Q1
+magnet.fieldMap = data/Q1-11pt18gev.table
+magnet.trans.l = 413.861868357
+magnet.trans.alpha0 = 1.72474900079
+magnet.trans.beta0 = 3.0
+
+magnet.name = Q2
+magnet.fieldMap = data/Q2-11pt33Gev.table
+magnet.trans.l = 679.821502264
+magnet.trans.alpha0 = 2.22367023801
+magnet.trans.beta0 = 3.0
+
+magnet.name = Q3
+magnet.fieldMap = data/Q3-10pt92Gev.table
+magnet.trans.l = 944.803729462
+magnet.trans.alpha0 = 2.44138224047
+magnet.trans.beta0 = 3.0

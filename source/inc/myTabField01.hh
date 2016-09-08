@@ -1,6 +1,8 @@
 #ifndef myTabField01_h
 #define myTabField01_h 1
 
+#include "myConfig.hh"
+
 #include "G4ThreeVector.hh"
 
 #include "globals.hh"
@@ -10,7 +12,7 @@
 
 class MyTabField {
   public:
-    MyTabField();
+    MyTabField(const config::MagnetConfig& magConf);
     virtual ~MyTabField();
 
     virtual void GetFieldValue(const G4double point[4], G4double* bField) const;
