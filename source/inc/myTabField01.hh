@@ -35,6 +35,9 @@ class MyTabField {
     G4int gridSize[3];
     G4double boundaryMin[3];
     G4double boundaryMax[3];
+
+    void parseToscaPlain(const config::MagnetConfig& magConf);
+    void parseToscaXz(const config::MagnetConfig& magConf);
 };
 
 #endif  // myTabField01_h
