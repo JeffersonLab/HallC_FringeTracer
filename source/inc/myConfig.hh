@@ -28,7 +28,7 @@ namespace config {
 
   extern std::vector<MagnetConfig> magnets;
 
-  void loadConfigFile();
+  void loadConfigFile(const std::string& fname);
   void printConfig();
 }
 

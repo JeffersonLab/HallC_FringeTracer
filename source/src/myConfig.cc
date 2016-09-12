@@ -18,8 +18,8 @@ namespace config {
 }
 
 
-void config::loadConfigFile() {
-  std::ifstream ifs("config.txt");
+void config::loadConfigFile(const std::string& fname) {
+  std::ifstream ifs(fname);
 
   std::string line;
   std::string item;

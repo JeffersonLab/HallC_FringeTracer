@@ -14,11 +14,18 @@
 #include "myActionInitialization.hh"
 
 #include "myConfig.hh"
+#include "cmdOptions.hh"
 
 
 int main(int argc, char* argv[]) {
+  cmdOptions::InputParser input(argc, argv);
+  if (input.cmdOptionExists("-h")) {
+    cmdOptions::printHelp();
+    return 0;
+  }
+
   // Parse config file.
-  config::loadConfigFile();
+  config::loadConfigFile(cmdOptions::getConfigFile(input));
 
   // Default run manager.
   G4RunManager* runManager = new G4RunManager;
@@ -40,7 +47,8 @@ int main(int argc, char* argv[]) {
 
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-  if (argc==1) {
+  std::string macroFile = cmdOptions::getMacroFile(input);
+  if (macroFile=="") {
     // Interactive mode.
 #ifdef G4UI_USE
     G4UIExecutive* UI = new G4UIExecutive(argc, argv);
@@ -56,8 +64,7 @@ int main(int argc, char* argv[]) {
   else {
     // Batch mode.
     G4String command = "/control/execute ";
-    G4String fileName = argv[1];
-    UImanager->ApplyCommand(command + fileName);
+    UImanager->ApplyCommand(command + macroFile);
   }
 
   // Terminate.

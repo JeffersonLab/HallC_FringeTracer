@@ -47,6 +47,7 @@ set(FRINGETRACER_SCRIPTS
   init.mac
   init_vis.mac
   vis.mac
+  run.mac
   config.txt
   )
 

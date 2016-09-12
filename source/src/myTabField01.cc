@@ -29,7 +29,8 @@ MyTabField::MyTabField(const config::MagnetConfig& magConf) {
   cth = cos(-1.0*thTosca);
   sth = sin(-1.0*thTosca);
 
-  parseToscaPlain(magConf);
+  //parseToscaPlain(magConf);
+  parseToscaXz(magConf);
 }
 
 
@@ -193,12 +194,13 @@ void MyTabField::parseToscaXz(const config::MagnetConfig& magConf) {
   zField[0] = strtod(tmp, NULL)*gauss;
 
   for (int i=1; i<len-1; ++i) {
+    fgets(buffer, sizeof(buffer), fpipe);
     strtod(buffer, &tmp);
     strtod(tmp, &tmp);
     strtod(tmp, &tmp);
-    xField[i] = strtod(tmp, &tmp);
-    yField[i] = strtod(tmp, &tmp);
-    zField[i] = strtod(tmp, NULL);
+    xField[i] = strtod(tmp, &tmp)*gauss;
+    yField[i] = strtod(tmp, &tmp)*gauss;
+    zField[i] = strtod(tmp, NULL)*gauss;
   }
 
   fgets(buffer, sizeof(buffer), fpipe);
