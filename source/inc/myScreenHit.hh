@@ -2,6 +2,7 @@
 #define myScreenHit_h 1
 
 #include "G4Allocator.hh"
+#include "G4String.hh"
 #include "G4THitsCollection.hh"
 #include "G4ThreeVector.hh"
 #include "G4VHit.hh"
@@ -26,13 +27,16 @@ class MyScreenHit : public G4VHit {
 
     void SetTrackID(G4int track) {fTrackID = track;};
     void SetPos(G4ThreeVector xyz) {fPos = xyz;};
+    void SetParticleType(G4String type) {fParticleType = type;};
 
     G4int GetTrackID() const {return fTrackID;};
     G4ThreeVector GetPos() const {return fPos;};
+    G4String GetParticleType() const {return fParticleType;};
 
   private:
     G4int fTrackID;
     G4ThreeVector fPos;
+    G4String fParticleType;
 };
 
 

@@ -32,6 +32,7 @@ G4bool MyScreenSD::ProcessHits(G4Step* step, G4TouchableHistory*) {
 
   newHit->SetTrackID(step->GetTrack()->GetTrackID());
   newHit->SetPos(step->GetPreStepPoint()->GetPosition());
+  newHit->SetParticleType(step->GetTrack()->GetParticleDefinition()->GetParticleName());
 
   fHitsCollection->insert(newHit);
 

@@ -6,6 +6,7 @@
 #include "G4Event.hh"
 #include "G4ios.hh"
 #include "G4SDManager.hh"
+#include "G4String.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 
@@ -32,10 +33,17 @@ void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
     MyScreenHit* screenHit = (*screenHC)[i];
 
     G4ThreeVector pos = screenHit->GetPos();
+    G4String particleType = screenHit->GetParticleType();
 
     analysisManager->FillNtupleDColumn(0, pos[0]);
     analysisManager->FillNtupleDColumn(1, pos[1]);
     analysisManager->FillNtupleDColumn(2, pos[2]);
+    // Fill type of particle.
+    if (particleType=="e-") analysisManager->FillNtupleIColumn(3, 0);
+    else if (particleType=="e+") analysisManager->FillNtupleIColumn(3, 1);
+    else if (particleType=="gamma") analysisManager->FillNtupleIColumn(3, 2);
+    else analysisManager->FillNtupleIColumn(3, -1);
+
     analysisManager->AddNtupleRow();
   }
 }

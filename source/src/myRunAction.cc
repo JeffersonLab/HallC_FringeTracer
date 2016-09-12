@@ -13,6 +13,7 @@ MyRunAction::MyRunAction() : G4UserRunAction() {
   analysisManager->CreateNtupleDColumn("x [mm]");
   analysisManager->CreateNtupleDColumn("y [mm]");
   analysisManager->CreateNtupleDColumn("z [mm]");
+  analysisManager->CreateNtupleIColumn("particle type");
   analysisManager->FinishNtuple();
 }
 

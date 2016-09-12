@@ -13,12 +13,18 @@
 G4Allocator<MyScreenHit>* MyScreenHitAllocator=0;
 
 
-MyScreenHit::MyScreenHit() : G4VHit(), fTrackID(-1), fPos(G4ThreeVector()) {}
+MyScreenHit::MyScreenHit()
+: G4VHit(),
+  fTrackID(-1),
+  fPos(G4ThreeVector()),
+  fParticleType()
+{}
 
 
 MyScreenHit::MyScreenHit(const MyScreenHit& right) : G4VHit() {
   fTrackID = right.fTrackID;
   fPos = right.fPos;
+  fParticleType = right.fParticleType;
 }
 
 
@@ -28,6 +34,7 @@ MyScreenHit::~MyScreenHit() {}
 const MyScreenHit& MyScreenHit::operator=(const MyScreenHit& right) {
   fTrackID = right.fTrackID;
   fPos = right.fPos;
+  fParticleType = right.fParticleType;
 
   return *this;
 }
@@ -55,6 +62,7 @@ void MyScreenHit::Draw() {
 void MyScreenHit::Print() {
   G4cout
     << "  trackID: " << fTrackID << "  "
+    << fParticleType << "  "
     << std::setw(7) << G4BestUnit(fPos, "Length")
     << G4endl;
 }
