@@ -1,1 +1,5 @@
 build*
+
+# Plots in the plotting folder.
+plotting/*.pdf
+plotting/*.png
