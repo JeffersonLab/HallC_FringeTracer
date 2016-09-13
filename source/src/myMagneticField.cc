@@ -5,6 +5,7 @@
 
 
 MyMagneticField::MyMagneticField() : G4MagneticField() {
+  // Create an entry for each field defined in the configuration file.
   for (size_t i=0; i<config::magnets.size(); ++i) {
     magFields.push_back(MyTabField(config::magnets.at(i)));
   }
@@ -19,6 +20,7 @@ void MyMagneticField::GetFieldValue(const G4double point[4], G4double* bField) c
   bField[1] = 0.0;
   bField[2] = 0.0;
 
+  // Sum over all individual fields.
   for (size_t i=0; i<config::magnets.size(); ++i) {
     magFields.at(i).GetFieldValue(point, bField);
   }

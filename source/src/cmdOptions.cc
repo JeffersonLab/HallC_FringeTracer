@@ -12,12 +12,9 @@ cmdOptions::InputParser::InputParser(int &argc, char **argv) {
 std::string cmdOptions::InputParser::getCmdOption(const std::string &option) const {
   std::vector<std::string>::const_iterator itr;
   itr = std::find(this->tokens.begin(), this->tokens.end(), option);
-  if (itr!=this->tokens.end() && ++itr!=this->tokens.end()) {
-      return *itr;
-  }
-  else {
-    return "";
-  }
+  // Return value of the command line option if found, or empty string otherwise.
+  if (itr!=this->tokens.end() && ++itr!=this->tokens.end()) return *itr;
+  else return "";
 }
 
 
@@ -34,6 +31,9 @@ void cmdOptions::printHelp() {
   std::cout << "  -m fname : use `fname` as macro file for batch mode" << std::endl;
   std::cout << "             default is empty for interactive mode" << std::endl;
 }
+
+
+// Implement separate get functions in case a default option needs to be provided.
 
 std::string cmdOptions::getConfigFile(const InputParser& input) {
   std::string fname = input.getCmdOption("-c");

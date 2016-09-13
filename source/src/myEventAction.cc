@@ -21,14 +21,15 @@ void MyEventAction::BeginOfEventAction(const G4Event*) {}
 
 
 void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
+  // Assing ID at the first event of the run.
   if (fScreenHCID == -1) {
     fScreenHCID = G4SDManager::GetSDMpointer()->GetCollectionID("screenHitsCollection");
   }
 
   MyScreenHitsCollection* screenHC = GetHitsCollection(fScreenHCID, anEvent);
-
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
+  // Process events in the hits collection.
   for (int i=0; i<screenHC->entries(); ++i) {
     MyScreenHit* screenHit = (*screenHC)[i];
 

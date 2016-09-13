@@ -10,36 +10,55 @@
 #include "globals.hh"
 
 
+//! Class detailing a hit on the beam dump screen.
 class MyScreenHit : public G4VHit {
   public:
+    //! A constructor.
     MyScreenHit();
+    //! A copy constructor.
     MyScreenHit(const MyScreenHit&);
+    //! A destructor.
     virtual ~MyScreenHit();
 
+    //! Assignment operator.
     const MyScreenHit& operator=(const MyScreenHit&);
+    //! Equality operator.
     G4int operator==(const MyScreenHit&) const;
-
+    //! New operator.
     inline void* operator new(size_t);
+    //! Delete operator.
     inline void operator delete(void*);
 
+    //! Draws the hit in the visualization.
     virtual void Draw();
+    //! Prints the hit to the output.
     virtual void Print();
 
+    //! Sets track ID.
     void SetTrackID(G4int track) {fTrackID = track;};
+    //! Sets position of the hit.
     void SetPos(G4ThreeVector xyz) {fPos = xyz;};
+    //! Sets particle type.
     void SetParticleType(G4String type) {fParticleType = type;};
 
+    //! Gets track ID.
     G4int GetTrackID() const {return fTrackID;};
+    //! Gets position of the hit.
     G4ThreeVector GetPos() const {return fPos;};
+    //! Gets particle type.
     G4String GetParticleType() const {return fParticleType;};
 
   private:
+    //! Track ID.
     G4int fTrackID;
+    //! Position of the hit.
     G4ThreeVector fPos;
+    //! Particle type.
     G4String fParticleType;
 };
 
 
+//! Typedef of a screen hits collection.
 typedef G4THitsCollection<MyScreenHit> MyScreenHitsCollection;
 
 extern G4Allocator<MyScreenHit>* MyScreenHitAllocator;

@@ -17,6 +17,8 @@
 
 #include "G4ios.hh"
 
+
+// Initialization of static members.
 MyMagneticField* MyDetectorConstruction::fMagneticField = 0;
 G4FieldManager* MyDetectorConstruction::fFieldMgr = 0;
 

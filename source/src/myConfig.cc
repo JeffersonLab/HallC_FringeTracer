@@ -8,11 +8,11 @@
 
 namespace config {
   std::string screenHitOutName = "out";
-  double shmsAngle = 5.5;
+  double shmsAngle = 5.5;  // deg
 
-  double beamEnergy = 11.0;
-  double beamRasterX = 4.0;
-  double beamRasterY = 4.0;
+  double beamEnergy = 11.0;  // GeV
+  double beamRasterX = 4.0;  // +- mm
+  double beamRasterY = 4.0;  // +- mm
 
   std::vector<MagnetConfig> magnets;
 }
@@ -26,6 +26,7 @@ void config::loadConfigFile(const std::string& fname) {
 
   if (ifs.is_open()) {
 
+    // Loop over each line in the file.
     while (getline(ifs, line)) {
       if (line.empty()) continue;
 
@@ -34,11 +35,17 @@ void config::loadConfigFile(const std::string& fname) {
       std::stringstream ss;
       ss.str(line);
 
+      // Tokenize the line.
       while(getline(ss, item, ' ')) {
         if (!item.empty()) tokens.push_back(item);
       }
 
+      // Check for comment line.
       if (tokens[0][0] == '#') continue;
+
+      // Valid lines should be (spaces!): keyword = value # comment.
+      // tokens[0] -> keyword
+      // tokens[2] -> value
 
       // General settings.
       if (tokens[0] == "screenHit.outName") {

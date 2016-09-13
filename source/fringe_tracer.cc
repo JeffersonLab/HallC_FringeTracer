@@ -18,6 +18,7 @@
 
 
 int main(int argc, char* argv[]) {
+  // Parse command line arguments.
   cmdOptions::InputParser input(argc, argv);
   if (input.cmdOptionExists("-h")) {
     cmdOptions::printHelp();
@@ -47,6 +48,7 @@ int main(int argc, char* argv[]) {
 
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
+  // Start interactive or batch session.
   std::string macroFile = cmdOptions::getMacroFile(input);
   if (macroFile=="") {
     // Interactive mode.

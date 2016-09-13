@@ -21,9 +21,11 @@ MyTabField::MyTabField(const config::MagnetConfig& magConf) {
   G4cout << G4endl;
 
   transTosca = G4ThreeVector();
+  // (l*sin(alpha0 + th), 0, l*cos(alpha0+th))
   transTosca[0] = magConf.transLength*cm*sin((magConf.transAlpha0+config::shmsAngle)*degree);
   transTosca[2] = magConf.transLength*cm*cos((magConf.transAlpha0+config::shmsAngle)*degree);
 
+  // beta0 + th
   thTosca = (magConf.transBeta0 + config::shmsAngle)*degree;
 
   cth = cos(-1.0*thTosca);
@@ -38,55 +40,58 @@ MyTabField::~MyTabField() {}
 
 
 void MyTabField::GetFieldValue(const G4double point[4], G4double* bField) const {
-  //G4cout << "(" << point[0] << ", " << point[1] << ", "
-  //<< point[2] << ", " << point[3] << ")" << G4endl;
-
-  G4double tpoint[4];
+  G4double tpoint[4];  // Point in field cs.
   transform(point, tpoint);
 
-  G4bool yNeg = false;
+  // Use mirroring to get values for y<0.
+  G4int yNegMultiplier = 1;
   if (tpoint[1]<0.0) {
     tpoint[1] *= -1.0;
-    yNeg = true;
+    yNegMultiplier = -1;
   }
 
+  // Check if point is within field boundaries.
   if (
     boundaryMin[0]<=tpoint[0] && tpoint[0]<=boundaryMax[0] &&
     boundaryMin[1]<=tpoint[1] && tpoint[1]<=boundaryMax[1] &&
     boundaryMin[2]<=tpoint[2] && tpoint[2]<=boundaryMax[2]
   ) {
+    // Fractional position within the boundaries.
     G4double posFraction[3] = {0.0, 0.0, 0.0};
+    // Local position within the grid cell.
     G4double posLocal[3] = {0.0, 0.0, 0.0};
+    // Index of grid cell in double.
     G4double posIndexd[3] = {0.0, 0.0, 0.0};
+    // Index of grid cell.
     G4int posIndex[3] = {0, 0, 0};
 
     for (size_t i=0; i<3; ++i) {
       posFraction[i] = (tpoint[i]-boundaryMin[i]) / (boundaryMax[i]-boundaryMin[i]);
+      // Get position in grid cell units and split it into whole and fractional part.
       posLocal[i] = (std::modf(posFraction[i]*(gridSize[i]-1), &posIndexd[i]));
       posIndex[i] = static_cast<G4int>(posIndexd[i]);
 
+      // If we hit the max boundary, the grid cell index need to be shifted for 1.
       if (posIndex[i]==gridSize[i]-1) {
         --posIndex[i];
         posLocal[i] = 1.0;
       }
     }
 
-    bField[0] += interpolate(xField, posIndex, posLocal);
+    // Add this field's contribution to the total magnetic field.
+    // If y<0, the x and z contributions need to be reversed.
+    bField[0] += interpolate(xField, posIndex, posLocal) * yNegMultiplier;
     bField[1] += interpolate(yField, posIndex, posLocal);
-    bField[2] += interpolate(zField, posIndex, posLocal);
-
-    if (yNeg) {
-      bField[0] *= -1.0;
-      bField[2] *= -1.0;
-    }
+    bField[2] += interpolate(zField, posIndex, posLocal) * yNegMultiplier;
   }
 }
 
 
 void MyTabField::transform(const G4double point[4], G4double* tpoint) const {
+  // Translation in xz plane.
   double xt = point[0] - transTosca[0];
   double zt = point[2] - transTosca[2];
-
+  // Rotation about y axis.
   tpoint[0] = cth*xt + sth*zt;
   tpoint[1] = point[1];
   tpoint[2] = cth*zt - sth*xt;
@@ -137,7 +142,7 @@ void MyTabField::parseToscaPlain(const config::MagnetConfig& magConf) {
   xField[0] = Bx*gauss;
   yField[0] = By*gauss;
   zField[0] = Bz*gauss;
-
+  // First line define the minimal grid boundary.
   boundaryMin[0] = x*cm;
   boundaryMin[1] = y*cm;
   boundaryMin[2] = z*cm;
@@ -148,7 +153,7 @@ void MyTabField::parseToscaPlain(const config::MagnetConfig& magConf) {
     yField[i] = By*gauss;
     zField[i] = Bz*gauss;
   }
-
+  // Last line define the maximal grid boundary.
   boundaryMax[0] = x*cm;
   boundaryMax[1] = y*cm;
   boundaryMax[2] = z*cm;
@@ -162,6 +167,7 @@ void MyTabField::parseToscaXz(const config::MagnetConfig& magConf) {
   char buffer[512];
   char* tmp;
 
+  // Call outside xz utility to uncompress the field map.
   std::string command = "xz --decompress --stdout " + magConf.fieldMapFile;
   fpipe = popen(command.c_str(), "r");
   if (!fpipe) {
@@ -186,6 +192,7 @@ void MyTabField::parseToscaXz(const config::MagnetConfig& magConf) {
 
   // Read the grid.
   fgets(buffer, sizeof(buffer), fpipe);
+  // First line defines minimal grid boundary.
   boundaryMin[0] = strtod(buffer, &tmp)*cm;
   boundaryMin[1] = strtod(tmp, &tmp)*cm;
   boundaryMin[2] = strtod(tmp, &tmp)*cm;
@@ -204,6 +211,7 @@ void MyTabField::parseToscaXz(const config::MagnetConfig& magConf) {
   }
 
   fgets(buffer, sizeof(buffer), fpipe);
+  // LAst line defines maximal grid boundary.
   boundaryMax[0] = strtod(buffer, &tmp)*cm;
   boundaryMax[1] = strtod(tmp, &tmp)*cm;
   boundaryMax[2] = strtod(tmp, &tmp)*cm;

@@ -32,6 +32,7 @@ MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction() {
 
 
 void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
+  // A square, uniformly populated beam raster.
   G4double x0 = 2*config::beamRasterX*mm * (G4UniformRand()-0.5);
   G4double y0 = 2*config::beamRasterY*mm * (G4UniformRand()-0.5);
 

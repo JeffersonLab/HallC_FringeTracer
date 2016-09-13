@@ -8,9 +8,9 @@ beam.raster.y = 4.0  # +- mm
 
 magnet.name = HB
 magnet.fieldMap = data/HB-V9pt3-11pt3Gev.table.xz
-magnet.trans.l = 175.990321453
-magnet.trans.alpha0 = 0.127921986971
-magnet.trans.beta0 = 181.5
+magnet.trans.l = 175.990321453  # cm
+magnet.trans.alpha0 = 0.127921986971  # deg
+magnet.trans.beta0 = 181.5  # deg
 
 magnet.name = Q1
 magnet.fieldMap = data/Q1-11pt18gev.table.xz
