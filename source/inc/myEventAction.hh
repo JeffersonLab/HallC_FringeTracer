@@ -30,6 +30,7 @@ class MyEventAction : public G4UserEventAction {
 
     //! Hit collection ID for beam dump screen.
     G4int fScreenHCID;
+    G4int fBpmHCID;
 };
 
 

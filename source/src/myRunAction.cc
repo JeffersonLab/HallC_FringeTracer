@@ -9,12 +9,19 @@
 MyRunAction::MyRunAction() : G4UserRunAction() {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
-  analysisManager->CreateNtuple("screen_hits", "screen hits");
-  analysisManager->CreateNtupleDColumn("x [mm]");
-  analysisManager->CreateNtupleDColumn("y [mm]");
-  analysisManager->CreateNtupleDColumn("z [mm]");
-  analysisManager->CreateNtupleIColumn("particle type");
-  analysisManager->FinishNtuple();
+  analysisManager->CreateNtuple("bdScreenHits", "beam dump screen hits");
+  analysisManager->CreateNtupleDColumn(0, "x [mm]");
+  analysisManager->CreateNtupleDColumn(0, "y [mm]");
+  analysisManager->CreateNtupleDColumn(0, "z [mm]");
+  analysisManager->CreateNtupleIColumn(0, "particle type");
+  analysisManager->FinishNtuple(0);
+
+  analysisManager->CreateNtuple("bpmScreenHits", "BPM screen hits");
+  analysisManager->CreateNtupleDColumn(1, "x [mm]");
+  analysisManager->CreateNtupleDColumn(1, "y [mm]");
+  analysisManager->CreateNtupleDColumn(1, "z [mm]");
+  analysisManager->CreateNtupleIColumn(1, "particle type");
+  analysisManager->FinishNtuple(1);
 }
 
 

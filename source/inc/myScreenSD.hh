@@ -13,7 +13,7 @@ class G4Step;
 class G4TouchableHistory;
 
 
-//! Class detailing beam dump screen sensitive detector.
+//! Class detailing screen sensitive detector.
 class MyScreenSD : public G4VSensitiveDetector {
   public:
     //! A constructor.
@@ -29,7 +29,7 @@ class MyScreenSD : public G4VSensitiveDetector {
     virtual void EndOfEvent(G4HCofThisEvent*);
 
   private:
-    //! Pointer to hits collection in the beam dump screen.
+    //! Pointer to hits collection in the screen.
     MyScreenHitsCollection* fHitsCollection;
 };
 

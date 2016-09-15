@@ -5,26 +5,30 @@ fields on the beam traveling to the beam dump.
 
 ## Components
 
-- ### Beam gun
+### Beam gun
 
 Beam gun is firing mono-energetic electrons as a primary beam. It simulates a
 square raster with an uniform particle distribution. The beam energy and the
 raster size can be set in the configuration file.
 
-- ### Target
+### Target
 
 The target is used to introduce an energy loss and multiple scattering to obtain
 a more realistic beam profile for transporting through the fringe fields. A
 carbon target of 1.5% radiation length is currently implemented.
 
-- ### Screen
+### Screens
 
 A screen is set 51.8 m from the target to simulate the beam dump face. It is set
 as a sensitive detector, recording the position and type of particles hitting
 it. This information is then recorded in a `.csv` file for further analysis.
 The name of the output file can be set in the configuration file.
 
-- ### Magnetic fields
+Another two screens are set at 21.0 m and 25.7 m from the target to simulate the
+two big BPMs that would be installed there. The information from these two
+screens are saved to a `.csv` file for further analysis.
+
+### Magnetic fields
 
 Magnetic fields are read in from Tosca field maps compressed with an `xz`
 algorithm (method exists for also reading them as a plain text file). A
@@ -51,7 +55,7 @@ Also needs an `xz` utility to handle the uncompression.
 
 ## Run-time configuration
 
-- ### Command line options
+### Command line options
 
 Currently supported command line options are:
 - `-h`: displays help
@@ -63,7 +67,7 @@ set, a interactive session will be started.
 
 Each options has to be entered separately!
 
-- ### Configuration file
+### Configuration file
 
 A configuration file is used to set up the parameters of the simulation. The
 sintax is (note the spaces around `=` sign).
@@ -94,7 +98,7 @@ the z-axis of Tosca coordinate system
 A sample `config.txt` configuration file with all settings is provided with the
 code.
 
-- ### Macro files
+### Macro files
 
 There are three macro files that are used for fine-tuning of the various Geant4
 parameters.

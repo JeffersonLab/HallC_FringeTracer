@@ -6,10 +6,10 @@
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 
+#include <iostream>
 
-MyScreenSD::MyScreenSD(
-  const G4String& name, const G4String& hitsCollectionName
-)
+
+MyScreenSD::MyScreenSD(const G4String& name, const G4String& hitsCollectionName)
   : G4VSensitiveDetector(name), fHitsCollection(NULL)
 {
   collectionName.insert(hitsCollectionName);
@@ -20,6 +20,9 @@ MyScreenSD::~MyScreenSD() {}
 
 
 void MyScreenSD::Initialize(G4HCofThisEvent* hitCollection) {
+  // According to the documentation, `collectionName` is a protected member of
+  // the `G4VSensitiveDetector`. This makes it OK to call `collectionName[0]`
+  // to get string for this instance of sensitive detector.
   fHitsCollection = new MyScreenHitsCollection(SensitiveDetectorName, collectionName[0]);
 
   G4int hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);

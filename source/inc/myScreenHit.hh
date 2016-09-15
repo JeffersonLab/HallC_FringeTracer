@@ -10,7 +10,7 @@
 #include "globals.hh"
 
 
-//! Class detailing a hit on the beam dump screen.
+//! Class detailing a hit on the screen.
 class MyScreenHit : public G4VHit {
   public:
     //! A constructor.
@@ -40,6 +40,8 @@ class MyScreenHit : public G4VHit {
     void SetPos(G4ThreeVector xyz) {fPos = xyz;};
     //! Sets particle type.
     void SetParticleType(G4String type) {fParticleType = type;};
+    //! Sets detector copy number.
+    void SetCopyNo(G4int no) {fCopyNo = no;};
 
     //! Gets track ID.
     G4int GetTrackID() const {return fTrackID;};
@@ -47,6 +49,10 @@ class MyScreenHit : public G4VHit {
     G4ThreeVector GetPos() const {return fPos;};
     //! Gets particle type.
     G4String GetParticleType() const {return fParticleType;};
+    //! Gets index of particle type.
+    G4int GetParticleTypeIndex() const;
+    //! Gets detector copy number.
+    G4int GetCopyNo() {return fCopyNo;};
 
   private:
     //! Track ID.
@@ -55,6 +61,8 @@ class MyScreenHit : public G4VHit {
     G4ThreeVector fPos;
     //! Particle type.
     G4String fParticleType;
+    //! Detector copy number.
+    G4int fCopyNo;
 };
 
 

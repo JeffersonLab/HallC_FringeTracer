@@ -36,13 +36,13 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   G4NistManager* nist = G4NistManager::Instance();
 
   // World.
-  G4double world_hx = 1.0*m;
-  G4double world_hy = 1.0*m;
-  G4double world_hz = 52.0*m;
+  G4double hx = 1.0*m;
+  G4double hy = 1.0*m;
+  G4double hz = 52.0*m;
 
   G4Material* worldMat = nist->FindOrBuildMaterial("G4_Galactic");
 
-  G4Box* worldBox = new G4Box("World", world_hx, world_hy, world_hz);
+  G4Box* worldBox = new G4Box("World", hx, hy, hz);
   G4LogicalVolume* worldLog = new G4LogicalVolume(worldBox, worldMat, "World");
 
   G4VPhysicalVolume* worldPhys = new G4PVPlacement(
@@ -64,36 +64,17 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
   G4Material* targetMat = nist->FindOrBuildMaterial("G4_C");
   G4double radLength_C = 42.7 * g/cm/cm;
 
-  G4double target_hx = 10.0*cm;
-  G4double target_hy = 10.0*cm;
-  G4double target_hz = 0.015*radLength_C/targetMat->GetDensity() / 2.0;
+  hx = 10.0*cm;
+  hy = 10.0*cm;
+  hz = 0.015*radLength_C/targetMat->GetDensity() / 2.0;
 
-  G4Box* targetBox = new G4Box("Target_C", target_hx, target_hy, target_hz);
+  G4Box* targetBox = new G4Box("Target_C", hx, hy, hz);
   G4LogicalVolume* targetLog = new G4LogicalVolume(targetBox, targetMat, "Target_C");
   new G4PVPlacement(
     0,  // rotation
     G4ThreeVector(0.0, 0.0, 0.0),  // location
     targetLog,  // logical volume
     "Target_C",  // name
-    worldLog,  // mother volume
-    false,  // boolean operation
-    0  // copy number
-  );
-
-  // Screen.
-  G4double screen_hx = 40.0*cm;
-  G4double screen_hy = 40.0*cm;
-  G4double screen_hz = 0.5*mm;
-
-  G4Material* screenMat = nist->FindOrBuildMaterial("G4_Galactic");
-
-  G4Box* screenBox = new G4Box("Screen", screen_hx, screen_hy, screen_hz);
-  G4LogicalVolume* screenLog = new G4LogicalVolume(screenBox, screenMat, "Screen");
-  new G4PVPlacement(
-    0,  // rotation
-    G4ThreeVector(0.0, 0.0, 51.8*m),  // location
-    screenLog,  // logical volume
-    "Screen",  // name
     worldLog,  // mother volume
     false,  // boolean operation
     0  // copy number
@@ -114,17 +95,69 @@ G4VPhysicalVolume* MyDetectorConstruction::Construct() {
     0
   );
 
+  // Beam dump screen.
+  hx = 40.0*cm;
+  hy = 40.0*cm;
+  hz = 0.5*mm;
+
+  G4Material* bdScreenMat = nist->FindOrBuildMaterial("G4_Galactic");
+
+  G4Box* bdScreenBox = new G4Box("bdScreen", hx, hy, hz);
+  G4LogicalVolume* bdScreenLog = new G4LogicalVolume(bdScreenBox, bdScreenMat, "bdScreen");
+  new G4PVPlacement(
+    0,  // rotation
+    G4ThreeVector(0.0, 0.0, 51.8*m),  // location
+    bdScreenLog,  // logical volume
+    "bdScreen",  // name
+    worldLog,  // mother volume
+    false,  // boolean operation
+    0  // copy number
+  );
+
+  // Big BPM screen.
+  hx = 30.0*cm;
+  hy = 30.0*cm;
+  hz = 0.5*mm;
+
+  G4Material* bpmScreenMat = nist->FindOrBuildMaterial("G4_Galactic");
+
+  G4Box* bpmScreenBox = new G4Box("bpmScreen", hx, hy, hz);
+  G4LogicalVolume* bpmScreenLog = new G4LogicalVolume(bpmScreenBox, bpmScreenMat, "bpmScreen");
+  // BPM 1
+  new G4PVPlacement(
+    0,  // rotation
+    G4ThreeVector(0.0, 0.0, 827.248*2.54*cm),  // location
+    bpmScreenLog,  // logical volume
+    "bpmScreen",  // name
+    worldLog,  // mother volume
+    false,  // boolean operation
+    0  // copy number
+  );
+  // BPM 2
+  new G4PVPlacement(
+    0,  // rotation
+    G4ThreeVector(0.0, 0.0, 1010.848*2.54*cm),  // location
+    bpmScreenLog,  // logical volume
+    "bpmScreen",  // name
+    worldLog,  // mother volume
+    false,  // boolean operation
+    1  // copy number
+  );
+
   // Return physical world.
   return worldPhys;
 }
 
 
 void MyDetectorConstruction::ConstructSDandField() {
-  // Set screen sensitive detector.
-  G4String screenSDname = "beam/screenSD";
-  MyScreenSD* aScreenSD = new MyScreenSD(screenSDname, "screenHitsCollection");
+  // Set beam dump screen sensitive detector.
+  G4String bdScreenSDname = "beam/bdScreenSD";
+  MyScreenSD* bdScreenSD = new MyScreenSD(bdScreenSDname, "bdScreenHC");
+  SetSensitiveDetector("bdScreen", bdScreenSD);
 
-  SetSensitiveDetector("Screen", aScreenSD, true);
+  G4String bpmScreenSDname = "beam/bpmScreenSD";
+  MyScreenSD* bpmScreenSD = new MyScreenSD(bpmScreenSDname, "bpmScreenHC");
+  SetSensitiveDetector("bpmScreen", bpmScreenSD, true);
 
   // Set magnetic field.
   fMagneticField = new MyMagneticField();
