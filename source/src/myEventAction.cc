@@ -32,6 +32,7 @@ void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
 
   G4ThreeVector pos;
   G4int particleType;
+  G4int copyNo;
 
   // Process events in the beam dump hit collection.
   MyScreenHitsCollection* screenHC = GetHitsCollection(fScreenHCID, anEvent);
@@ -55,11 +56,13 @@ void MyEventAction::EndOfEventAction(const G4Event* anEvent) {
 
     pos = screenHit->GetPos();
     particleType = screenHit->GetParticleTypeIndex();
+    copyNo = screenHit->GetCopyNo();
 
     analysisManager->FillNtupleDColumn(1, 0, pos[0]);
     analysisManager->FillNtupleDColumn(1, 1, pos[1]);
     analysisManager->FillNtupleDColumn(1, 2, pos[2]);
     analysisManager->FillNtupleIColumn(1, 3, particleType);
+    analysisManager->FillNtupleIColumn(1, 4, copyNo+1);
     analysisManager->AddNtupleRow(1);
   }
 }

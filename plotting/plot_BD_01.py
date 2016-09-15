@@ -18,7 +18,7 @@ particleTypeNames = {
 
 
 data = pd.read_csv(
-    '../build-10/out_nt_screen_hits.csv',
+    '../build-10/out_nt_bdScreenHits.csv',
     header=None,
     names=colNames,
     comment='#'
@@ -63,7 +63,7 @@ def plot(data, typeName, pp):
     pp.savefig(dpi=150)
 
 
-with PdfPages('plot.pdf') as pp:
+with PdfPages('plot_BD.pdf') as pp:
     plot(data, 'all', pp)
 
     for particleType in particleTypes:

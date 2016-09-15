@@ -21,6 +21,7 @@ MyRunAction::MyRunAction() : G4UserRunAction() {
   analysisManager->CreateNtupleDColumn(1, "y [mm]");
   analysisManager->CreateNtupleDColumn(1, "z [mm]");
   analysisManager->CreateNtupleIColumn(1, "particle type");
+  analysisManager->CreateNtupleIColumn(1, "BPM number");
   analysisManager->FinishNtuple(1);
 }
 
