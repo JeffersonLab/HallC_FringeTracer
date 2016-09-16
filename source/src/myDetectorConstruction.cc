@@ -1,6 +1,7 @@
 #include "myDetectorConstruction.hh"
 #include "myConfig.hh"
 #include "myMagneticField.hh"
+#include "myMessenger.hh"
 #include "myScreenSD.hh"
 
 #include "G4Box.hh"
@@ -21,14 +22,19 @@
 // Initialization of static members.
 MyMagneticField* MyDetectorConstruction::fMagneticField = 0;
 G4FieldManager* MyDetectorConstruction::fFieldMgr = 0;
+MySHMSmessenger* MyDetectorConstruction::fSHMSmessenger = 0;
 
 
 MyDetectorConstruction::MyDetectorConstruction()
 : G4VUserDetectorConstruction()
-{}
+{
+  fSHMSmessenger = new MySHMSmessenger();
+}
 
 
-MyDetectorConstruction::~MyDetectorConstruction() {}
+MyDetectorConstruction::~MyDetectorConstruction() {
+  delete fSHMSmessenger;
+}
 
 
 G4VPhysicalVolume* MyDetectorConstruction::Construct() {
