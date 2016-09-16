@@ -21,6 +21,9 @@ class MyMagneticField : public G4MagneticField {
     //! Gets the summed field value of all individual fields at the point.
     virtual void GetFieldValue(const G4double point[4], G4double* bField) const;
 
+    //! Updates magnetic fields.
+    void updateField();
+
   private:
     //! Holds all individual magnetic fields contributing to this field.
     std::vector<MyTabField> magFields;

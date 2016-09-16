@@ -25,3 +25,10 @@ void MyMagneticField::GetFieldValue(const G4double point[4], G4double* bField) c
     magFields.at(i).GetFieldValue(point, bField);
   }
 }
+
+
+void MyMagneticField::updateField() {
+  for (size_t i=0; i<magFields.size(); ++i) {
+    magFields.at(i).updateTransformation(config::magnets.at(i));
+  }
+}

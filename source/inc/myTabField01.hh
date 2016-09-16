@@ -30,6 +30,9 @@ class MyTabField {
       const G4double posLocal[3]
     ) const;
 
+    //! Updates transformation parameters.
+    void updateTransformation(const config::MagnetConfig& magConf);
+
   private:
     //! Translation between target and Tosca cs.
     G4ThreeVector transTosca;

@@ -26,15 +26,10 @@ MySHMSmessenger* MyDetectorConstruction::fSHMSmessenger = 0;
 
 
 MyDetectorConstruction::MyDetectorConstruction()
-: G4VUserDetectorConstruction()
-{
-  fSHMSmessenger = new MySHMSmessenger();
-}
+: G4VUserDetectorConstruction() {}
 
 
-MyDetectorConstruction::~MyDetectorConstruction() {
-  delete fSHMSmessenger;
-}
+MyDetectorConstruction::~MyDetectorConstruction() {}
 
 
 G4VPhysicalVolume* MyDetectorConstruction::Construct() {
@@ -171,6 +166,10 @@ void MyDetectorConstruction::ConstructSDandField() {
   fFieldMgr->SetDetectorField(fMagneticField);
   fFieldMgr->CreateChordFinder(fMagneticField);
 
+  // Set SHMS messenger.
+  fSHMSmessenger = new MySHMSmessenger(fMagneticField);
+
   G4AutoDelete::Register(fMagneticField);
   G4AutoDelete::Register(fFieldMgr);
+  G4AutoDelete::Register(fSHMSmessenger);
 }

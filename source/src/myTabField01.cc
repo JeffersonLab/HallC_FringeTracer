@@ -14,22 +14,15 @@
 #include <fstream>
 
 
-MyTabField::MyTabField(const config::MagnetConfig& magConf) {
+MyTabField::MyTabField(const config::MagnetConfig& magConf)
+: transTosca(G4ThreeVector()), thTosca(0), cth(0), sth(0)
+{
   G4cout << G4endl;
   G4cout << "Reading in magnetic field map:" << G4endl;
   G4cout << "  " << magConf.name << " : " << magConf.fieldMapFile << G4endl;
   G4cout << G4endl;
 
-  transTosca = G4ThreeVector();
-  // (l*sin(alpha0 + th), 0, l*cos(alpha0+th))
-  transTosca[0] = magConf.transLength*cm*sin((magConf.transAlpha0+config::shmsAngle)*degree);
-  transTosca[2] = magConf.transLength*cm*cos((magConf.transAlpha0+config::shmsAngle)*degree);
-
-  // beta0 + th
-  thTosca = (magConf.transBeta0 + config::shmsAngle)*degree;
-
-  cth = cos(-1.0*thTosca);
-  sth = sin(-1.0*thTosca);
+  updateTransformation(magConf);
 
   //parseToscaPlain(magConf);
   parseToscaXz(magConf);
@@ -113,6 +106,19 @@ G4double MyTabField::interpolate(
     field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(1-posLocal[1])*(posLocal[2]) +
     field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0]+1)] * (posLocal[0])*(posLocal[1])*(posLocal[2]) +
     field[(posIndex[2]+1) + gridSize[2]*(posIndex[1]+1) + gridSize[2]*gridSize[1]*(posIndex[0])] * (1-posLocal[0])*(posLocal[1])*(posLocal[2]);
+}
+
+
+void MyTabField::updateTransformation(const config::MagnetConfig& magConf) {
+  // (l*sin(alpha0 + th), 0, l*cos(alpha0+th))
+  transTosca[0] = magConf.transLength*cm*sin((magConf.transAlpha0+config::shmsAngle)*degree);
+  transTosca[2] = magConf.transLength*cm*cos((magConf.transAlpha0+config::shmsAngle)*degree);
+
+  // beta0 + th
+  thTosca = (magConf.transBeta0 + config::shmsAngle)*degree;
+
+  cth = cos(-1.0*thTosca);
+  sth = sin(-1.0*thTosca);
 }
 
 
