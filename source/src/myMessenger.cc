@@ -4,6 +4,7 @@
 #include "myMagneticField.hh"
 
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
 #include "G4SystemOfUnits.hh"
@@ -48,6 +49,42 @@ G4String MySHMSmessenger::GetCurrentValue(G4UIcommand* command) {
 
   if (command==angleCmd) {
     cv = angleCmd->ConvertToString(config::shmsAngle);
+  }
+
+  return cv;
+}
+
+
+MyDetMessenger::MyDetMessenger() {
+  // Set detector commands directory.
+  detDirectory = new G4UIdirectory("/detectors/");
+  detDirectory->SetGuidance("Detectors control commands.");
+
+  // Set command for setting csv output name.
+  nameCmd = new G4UIcmdWithAString("/detectors/outName", this);
+  nameCmd->SetGuidance("Set base name for csv output files.");
+  nameCmd->SetParameterName("outName", true, true);
+}
+
+
+MyDetMessenger::~MyDetMessenger() {
+  delete detDirectory;
+  delete nameCmd;
+}
+
+
+void MyDetMessenger::SetNewValue(G4UIcommand* command, G4String newValues) {
+  if (command==nameCmd) {
+    config::screenHitOutName = newValues;
+  }
+}
+
+
+G4String MyDetMessenger::GetCurrentValue(G4UIcommand* command) {
+  G4String cv;
+
+  if (command==nameCmd) {
+    cv = config::screenHitOutName;
   }
 
   return cv;

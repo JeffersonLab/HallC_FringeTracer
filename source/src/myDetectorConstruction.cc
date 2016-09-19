@@ -23,6 +23,7 @@
 MyMagneticField* MyDetectorConstruction::fMagneticField = 0;
 G4FieldManager* MyDetectorConstruction::fFieldMgr = 0;
 MySHMSmessenger* MyDetectorConstruction::fSHMSmessenger = 0;
+MyDetMessenger* MyDetectorConstruction::fDetMessenger = 0;
 
 
 MyDetectorConstruction::MyDetectorConstruction()
@@ -166,8 +167,9 @@ void MyDetectorConstruction::ConstructSDandField() {
   fFieldMgr->SetDetectorField(fMagneticField);
   fFieldMgr->CreateChordFinder(fMagneticField);
 
-  // Set SHMS messenger.
+  // Set messengers.
   fSHMSmessenger = new MySHMSmessenger(fMagneticField);
+  fDetMessenger = new MyDetMessenger();
 
   G4AutoDelete::Register(fMagneticField);
   G4AutoDelete::Register(fFieldMgr);

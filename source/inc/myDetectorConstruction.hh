@@ -8,6 +8,7 @@
 
 class MyMagneticField;
 class MySHMSmessenger;
+class MyDetMessenger;
 
 class G4FieldManager;
 class G4VPhysicalVolume;
@@ -31,8 +32,9 @@ class MyDetectorConstruction : public G4VUserDetectorConstruction {
     static MyMagneticField* fMagneticField;
     //! Pointer to field manager.
     static G4FieldManager* fFieldMgr;
-    //! Pointer to SHMS messenger.
+    //! Pointers to messengers.
     static MySHMSmessenger* fSHMSmessenger;
+    static MyDetMessenger* fDetMessenger;
 };
 
 #endif  // myDetectorConstruction_h
