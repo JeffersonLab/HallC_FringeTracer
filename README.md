@@ -109,3 +109,9 @@ parameters.
 Additionally, a batch mode macro can be set using via command line arguments.
 
 Sample macro files are provided with the code.
+
+### Messengers
+
+Few settings can also be changed between two runs using the messenger framework:
+- `/SHMS/angle val` to change the angle of the SHMS to val (in deg)
+- `/detectors/outName val` to change the base-name of `csv` output files to val
