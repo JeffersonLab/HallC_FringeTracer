@@ -194,7 +194,7 @@ void MyTabField::parseToscaXz(const config::MagnetConfig& magConf) {
 
   // Skip the rest of header.
   fgets(buffer, sizeof(buffer), fpipe);
-  while (buffer[1]!='0') fgets(buffer, sizeof(buffer), fpipe);
+  while (atoi(strtok(buffer, " "))!=0) fgets(buffer, sizeof(buffer), fpipe);
 
   // Read the grid.
   fgets(buffer, sizeof(buffer), fpipe);
